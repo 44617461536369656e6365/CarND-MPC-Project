@@ -12,7 +12,8 @@ RUN apt-get update && \
 	apt-get install -y curl \
 	apt-get clean
 
-RUN curl -sSL https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz | tar -xzC /opt/cmake-3.9.0 --strip-components=1
+RUN mkdir -p /opt/cmake-3.9.0 && \
+        curl -sSL https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz | tar -xzC /opt/cmake-3.9.0 --strip-components=1
 
 VOLUME /usr/src
 
