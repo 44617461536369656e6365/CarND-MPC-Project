@@ -6,5 +6,6 @@ set "CurPath=%_CurPath:\=/%"
 set "CurPath=%CurPath:~0,-1%"
 
 call "%_CurPath%docker-id.bat
-docker build --tag=%DockerUserName%/%DockerImageName%:%DockerImageTag% --file="%CurPath%/Dockerfile" "%CurPath%"
+docker rm --force %DockerContainerName%
+
 endlocal
