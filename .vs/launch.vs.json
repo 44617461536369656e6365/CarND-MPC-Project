@@ -1,0 +1,28 @@
+{
+    "version": "0.2.1",
+    "defaults": {},
+    "configurations": [
+        {
+            "type": "cppdbg",
+            "name": "mpc",
+            "project": "CMakeLists.txt",
+            "projectTarget": "mpc",
+            "cwd": "${debugInfo.remoteWorkspaceRoot}",
+            "program": "${debugInfo.fullTargetPath}",
+            "MIMode": "gdb",
+            "externalConsole": true,
+            "remoteMachineName": "${debugInfo.remoteMachineName}",
+            "pipeTransport": {
+                "pipeProgram": "${debugInfo.shellexecPath}",
+                "pipeArgs": [
+                    "/s",
+                    "${debugInfo.remoteMachineId}",
+                    "/p",
+                    "${debugInfo.parentProcessId}",
+                    "/c"
+                ],
+                "debuggerPath": "/usr/bin/gdb"
+            }
+        }
+    ]
+}
