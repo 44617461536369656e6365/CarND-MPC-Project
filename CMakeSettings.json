@@ -70,7 +70,7 @@
             "remoteMachineName": "${defaultRemoteMachineName}",
             "configurationType": "Release",
             "remoteCMakeListsRoot": "/var/tmp/src/${workspaceHash}/${name}",
-            "cmakeExecutable": "/usr/local/bin/cmake",
+            "cmakeExecutable": "/opt/cmake-3.9.0/bin",
             "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
             "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
             "remoteBuildRoot": "/var/tmp/build/${workspaceHash}/build/${name}",
