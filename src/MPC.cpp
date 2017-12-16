@@ -6,8 +6,8 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 10;
-double dt = 0.2;
+size_t const N = 10;
+double const dt = 0.2;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -159,7 +159,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // element vector and there are 10 timesteps. The number of variables is:
   //
   // 4 * 10 + 2 * 9
-  size_t n_vars = 6 * N + (N - 1) * 2;
+  size_t n_vars = 6 * N + 2 * (N - 1);
   // TODO: Set the number of constraints
   size_t n_constraints = 6 * N;
 
