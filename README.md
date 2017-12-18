@@ -3,6 +3,49 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## The Model
+
+- Student describes their model in detail. This includes the state, actuators and update equations
+
+The model is the kinematic bicycle model as introduced in the lessons. The state is defined as a vector of following scalar values: 
+- x: The x position of the vehicle.
+- y: The y position of the vehicle.
+- &psi;: The orientation of the vehicle (`psi`).
+- v: The current velocity.
+- cte: The Cross-Track-Error
+- &epsilon;: The orientation error (`epsi`)
+
+The equations used to update the model are hard-coded on lines 128 - 135 in `MPC.cpp`. They correspond to the equations introduced in the lessons:
+
+```
+// x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+// y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+// psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+// v_[t+1] = v[t] + a[t] * dt
+// cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+// epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
+```  
+
+## Timestep Length and Elapsed Duration
+
+- Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
+
+I decided to start with recommended values `N = 10` and `dt = 0.1` and ended up with `N = 10` and `dt = 0.2`. Larger values of `N` lead and smaller values of `dt` increase the accuracy of the estimation but lead to larger compute times. It appears that for given model and at speeds around 50 MPH taking 10 values per second into consideration is sufficient.
+
+## Polynomial Fitting and MPC Preprocessing
+
+- A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
+
+I have used cubic polynomials to fit the waypoints. Before using them in the MPC solver I had to convert them from the global to vehicle coordinate system. This is accomplished in auxiliary function `transform_to_vehicle_coordinates` at lines 80 - 96 in `main.cpp`.
+
+## Model Predictive Control with Latency
+
+- The student implements Model Predictive Control that handles a 100 millisecond latency. Student provides details on how they deal with latency.
+
+I have accounted for the latency in the estimation by definition of an experimental latency constant `MPC::constants::latency` which I applied to the prediction in auxiliary function `apply_latency_to_state` at lines 98 - 104 in `main.cpp`. 
+
+---
+
 ## Dependencies
 
 * cmake >= 3.5
