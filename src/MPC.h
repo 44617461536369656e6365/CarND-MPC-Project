@@ -20,8 +20,8 @@ public:
         //
         // This is the length from front to CoG that has a similar radius.
         static constexpr auto const Lf = 2.67;
-        static constexpr auto const mph_to_ms_factor = 0.44704;
-        static constexpr auto const ref_v = 50.;
+        static constexpr auto const mph_to_mps_factor = 0.44704;
+        static constexpr auto const ref_v = 40.;
         static constexpr auto const latency = 0.1;
     };
 public:
