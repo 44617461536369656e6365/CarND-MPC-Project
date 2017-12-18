@@ -8,10 +8,16 @@
       "command": "${workspaceRoot}\\docker\\run-docker.bat"
     },
     {
-        "taskName": "stop-docker",
-        "appliesTo": "docker/stop-docker.bat",
+      "taskName": "stop-docker",
+      "appliesTo": "docker/stop-docker.bat",
+      "type": "launch",
+      "command": "${workspaceRoot}\\docker\\stop-docker.bat"
+    },
+    {
+        "taskName": "run-simulator",
+        "appliesTo": "run-simulator.bat",
         "type": "launch",
-        "command": "${workspaceRoot}\\docker\\stop-docker.bat"
+        "command": "${workspaceRoot}\\run-simulator.bat"
     }
   ]
 }
