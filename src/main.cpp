@@ -147,7 +147,7 @@ int main()
 
                         auto coeffs = polyfit(vehicle_pts.first, vehicle_pts.second, 3);
                         auto cte = polyeval(coeffs, 0);
-                        auto epsi = atan(coeffs[1]);
+                        auto epsi = -atan(coeffs[1]);
 
                         double x;
                         apply_latency_to_state(x, v, psi, a, delta);
