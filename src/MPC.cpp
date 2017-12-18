@@ -2,8 +2,6 @@
 #include <cppad/cppad.hpp>
 #include <cppad/ipopt/solve.hpp>
 #include "Eigen-3.3/Eigen/Core"
-#include <algorithm>
-#include <iterator>
 
 using CppAD::AD;
 
