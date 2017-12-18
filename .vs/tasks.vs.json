@@ -1,0 +1,17 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "run-docker",
+      "appliesTo": "docker/run-docker.bat",
+      "type": "launch",
+      "command": "${workspaceRoot}\\docker\\run-docker.bat"
+    },
+    {
+        "taskName": "stop-docker",
+        "appliesTo": "docker/stop-docker.bat",
+        "type": "launch",
+        "command": "${workspaceRoot}\\docker\\stop-docker.bat"
+    }
+  ]
+}
