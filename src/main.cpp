@@ -168,15 +168,12 @@ int main()
                         msgJson["steering_angle"] = steer_value / deg2rad(25);
                         msgJson["throttle"] = throttle_value;
 
-                        //Display the MPC predicted trajectory 
-                        vector<double> mpc_x_vals;
-                        vector<double> mpc_y_vals;
-
+                        //Display the MPC predicted trajectory
                         //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
                         // the points in the simulator are connected by a Green line
 
-                        msgJson["mpc_x"] = mpc.mpc_x_vals;
-                        msgJson["mpc_y"] = mpc.mpc_y_vals;
+                        msgJson["mpc_x"] = mpc.curr_x_vals;
+                        msgJson["mpc_y"] = mpc.curr_y_vals;
 
                         //Display the waypoints/reference line
                         vector<double> next_x_vals;

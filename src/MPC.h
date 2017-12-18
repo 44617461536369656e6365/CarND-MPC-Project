@@ -29,8 +29,8 @@ public:
 
     virtual ~MPC();
 
-    vector<double> mpc_x_vals;
-    vector<double> mpc_y_vals;
+    vector<double> curr_x_vals;
+    vector<double> curr_y_vals;
 
     // Solve the model given an initial state and polynomial coefficients.
     // Return the first actuatotions.
