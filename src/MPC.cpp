@@ -2,6 +2,8 @@
 #include <cppad/cppad.hpp>
 #include <cppad/ipopt/solve.hpp>
 #include "Eigen-3.3/Eigen/Core"
+#include <algorithm>
+#include <iterator>
 
 using CppAD::AD;
 
@@ -266,11 +268,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs)
     //
     // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
     // creates a 2 element double vector.
-    curr_x_vals = {};
-    curr_y_vals = {};
+    cur_x_vals = {};
+    cur_y_vals = {};
     for (auto i = 0u; i < N - 1; i++) {
-        curr_x_vals.push_back(solution.x[x_start + i + 1]);
-        curr_y_vals.push_back(solution.x[y_start + i + 1]);
+        cur_x_vals.push_back(solution.x[x_start + i + 1]);
+        cur_y_vals.push_back(solution.x[y_start + i + 1]);
     }
     return {solution.x[delta_start], solution.x[a_start]};
 }
