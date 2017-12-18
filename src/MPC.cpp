@@ -9,19 +9,6 @@ using CppAD::AD;
 size_t N = 10;
 double dt = 0.2;
 
-// This value assumes the model presented in the classroom is used.
-//
-// It was obtained by measuring the radius formed by running the vehicle in the
-// simulator around in a circle with a constant steering angle and velocity on a
-// flat terrain.
-//
-// Lf was tuned until the the radius formed by the simulating the model
-// presented in the classroom matched the previous radius.
-//
-// This is the length from front to CoG that has a similar radius.
-const double Lf = 2.67;
-
-double ref_v = 100 * 0.44704;
 double x_start = 0;
 double y_start = x_start + N;
 double psi_start = y_start + N;
@@ -53,7 +40,7 @@ public:
         for (int t = 0; t < N; t++) {
             fg[0] += 5000 * CppAD::pow(vars[cte_start + t], 2);
             fg[0] += 2500 * CppAD::pow(vars[epsi_start + t], 2);
-            fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
+            fg[0] += CppAD::pow(vars[v_start + t] - MPC::constants::ref_v, 2);
         }
 
         for (int t = 0; t < N - 1; t++) {
@@ -96,10 +83,10 @@ public:
 
             fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
             fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-            fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+            fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / MPC::constants::Lf * dt);
             fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
             fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-            fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+            fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / MPC::constants::Lf * dt);
         }
     }
 };

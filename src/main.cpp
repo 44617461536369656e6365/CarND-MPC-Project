@@ -77,6 +77,32 @@ Eigen::VectorXd polyfit(Eigen::VectorXd xvals, Eigen::VectorXd yvals,
     return result;
 }
 
+std::pair<Eigen::VectorXd, Eigen::VectorXd> transform_to_vehicle_coordinates(
+    std::vector<double> const& ptsx_,
+    std::vector<double> const& ptsy_,
+    double psi_,
+    double px_, 
+    double py_)
+{
+    auto vehicle_ptsx = Eigen::VectorXd(ptsx_.size());
+    auto vehicle_ptsy = Eigen::VectorXd(ptsy_.size());
+    for (auto i = 0u; i < ptsx_.size(); i++) {
+        double x = (ptsx_[i] - px_) * cos(psi_) + (ptsy_[i] - py_) * sin(psi_);
+        double y = -(ptsx_[i] - px_) * sin(psi_) + (ptsy_[i] - py_) * cos(psi_);
+        vehicle_ptsx[i] = x;
+        vehicle_ptsy[i] = y;
+    }
+    return std::make_pair(vehicle_ptsx, vehicle_ptsy);
+}
+
+void apply_latency_to_state(
+    double& x_, double& v_, double& psi_, double a_, double delta)
+{
+    x_ = v_ * cos(psi_) * MPC::constants::latency;
+    psi_ = v_ / MPC::constants::Lf * delta * MPC::constants::latency;
+    v_ = v_ + a_ * MPC::constants::latency;
+}
+
 int main()
 {
     uWS::Hub h;
@@ -107,7 +133,7 @@ int main()
                         double delta = j[1]["steering_angle"];
                         double a = j[1]["throttle"];
 
-                        v *= 0.44704;
+                        v *= MPC::constants::mph_to_ms_factor;
                         delta *= -1;
 
 
@@ -117,29 +143,15 @@ int main()
                         * Both are in between [-1, 1].
                         *
                         */
-                        auto vehicle_ptsx = Eigen::VectorXd(ptsx.size());
-                        auto vehicle_ptsy = Eigen::VectorXd(ptsy.size());
+                        auto vehicle_pts = transform_to_vehicle_coordinates(ptsx, ptsy, psi, px, py);
 
-                        for (auto i = 0; i < ptsx.size(); i++) {
-                            double x = (ptsx[i] - px) * cos(psi) + (ptsy[i] - py) * sin(psi);
-                            double y = -(ptsx[i] - px) * sin(psi) + (ptsy[i] - py) * cos(psi);
-                            vehicle_ptsx[i] = x;
-                            vehicle_ptsy[i] = y;
-                        }
-
-                        auto coeffs = polyfit(vehicle_ptsx, vehicle_ptsy, 3);
+                        auto coeffs = polyfit(vehicle_pts.first, vehicle_pts.second, 3);
                         auto cte = polyeval(coeffs, 0);
                         auto epsi = atan(coeffs[1]);
 
+                        double x;
+                        apply_latency_to_state(x, v, psi, a, delta);
                         Eigen::VectorXd state_vector(6);
-
-                        double latency = 0.1;
-                        double Lf = 2.67;
-
-                        double x = v * cos(psi) * latency;
-                        psi = v / Lf * delta * latency;
-                        v = v + a * latency;
-
                         state_vector << x, 0, psi, v, cte, epsi;
 
                         auto results = mpc.Solve(state_vector, coeffs);
@@ -170,9 +182,9 @@ int main()
                         vector<double> next_x_vals;
                         vector<double> next_y_vals;
 
-                        for (auto i = 0; i < vehicle_ptsx.size(); i++) {
-                            next_x_vals.push_back(vehicle_ptsx[i]);
-                            next_y_vals.push_back(vehicle_ptsy[i]);
+                        for (auto i = 0; i < vehicle_pts.first.size(); i++) {
+                            next_x_vals.push_back(vehicle_pts.first[i]);
+                            next_y_vals.push_back(vehicle_pts.second[i]);
                         }
 
                         //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
