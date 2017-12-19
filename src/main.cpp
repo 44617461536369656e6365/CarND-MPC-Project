@@ -95,12 +95,17 @@ std::pair<Eigen::VectorXd, Eigen::VectorXd> transform_to_vehicle_coordinates(
     return std::make_pair(vehicle_ptsx, vehicle_ptsy);
 }
 
-void apply_latency_to_state(
-    double& x_, double& v_, double& psi_, double a_, double delta)
+void predict_state(
+    double const& x0_, double const& y0_, double const& psi0_, double const& v0_, double const& cte0_, double const& epsi0_,
+    double& x_, double& y_, double& psi_, double& v_, double& cte_, double& epsi_, 
+    double a_, double delta)
 {
-    x_ = v_ * cos(psi_) * MPC::constants::latency;
-    psi_ = v_ / MPC::constants::Lf * delta * MPC::constants::latency;
-    v_ = v_ + a_ * MPC::constants::latency;
+    x_ = x0_ + v0_ * cos(psi0_) * MPC::constants::latency;
+    y_ = y0_ + v0_ * sin(psi0_) * MPC::constants::latency;
+    psi_ = v0_ / MPC::constants::Lf * delta * MPC::constants::latency;
+    //cte_ = cte0_ + v0_ * sin(epsi0_) * MPC::constants::latency;
+    //epsi_ = epsi0_ + v0_ / MPC::constants::Lf * delta * MPC::constants::latency;
+    v_ = v0_ + a_ * MPC::constants::latency;
 }
 
 int main()
@@ -133,9 +138,9 @@ int main()
                         double delta = j[1]["steering_angle"];
                         double a = j[1]["throttle"];
 
-                        v *= MPC::constants::mph_to_ms_factor;
-                        delta *= -1;
-
+                        // Convert speed  from mph to m/s
+                        v *= MPC::constants::mph_to_mps_factor;
+                        
 
                         /*
                         * TODO: Calculate steering angle and throttle using MPC.
@@ -149,10 +154,19 @@ int main()
                         auto cte = polyeval(coeffs, 0);
                         auto epsi = -atan(coeffs[1]);
 
-                        double x;
-                        apply_latency_to_state(x, v, psi, a, delta);
+                        double 
+                            x0 = 0., x,
+                            y0 = 0., y,
+                            psi0 = 0., 
+                            v0 = v, 
+                            cte0 = cte, 
+                            epsi0 = epsi;
+                        predict_state(
+                            x0, y0, psi0, v0, cte0, epsi0,
+                            x, y, psi, v, cte, epsi,
+                            a, -delta);
                         Eigen::VectorXd state_vector(6);
-                        state_vector << x, 0, psi, v, cte, epsi;
+                        state_vector << x, 0., psi, v, cte, epsi;
 
                         auto results = mpc.Solve(state_vector, coeffs);
 
