@@ -166,7 +166,7 @@ int main()
                             x, y, psi, v, cte, epsi,
                             a, -delta);
                         Eigen::VectorXd state_vector(6);
-                        state_vector << x, 0., psi, v, cte, epsi;
+                        state_vector << x, y, psi, v, cte, epsi;
 
                         auto results = mpc.Solve(state_vector, coeffs);
 

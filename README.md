@@ -30,7 +30,7 @@ The equations used to update the model are hard-coded on lines 128 - 135 in `MPC
 
 - Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
 
-I decided to start with recommended values `N = 10` and `dt = 0.1` and ended up with `N = 10` and `dt = 0.2`. Larger values of `N` lead and smaller values of `dt` increase the accuracy of the estimation but lead to larger compute times. It appears that for given model and at speeds around 50 MPH taking 10 values per second into consideration is sufficient.
+I decided to start with recommended values `N = 10` and `dt = 0.1` and ended up with `N = 10` and `dt = 0.2`. Larger values of `N` lead and smaller values of `dt` increase the accuracy of the estimation but lead to larger compute times. It appears that for given model and at speeds around 60 MPH a prediction horizon of 2 seconds is sufficient.
 
 ## Polynomial Fitting and MPC Preprocessing
 
@@ -42,7 +42,7 @@ I have used cubic polynomials to fit the waypoints. Before using them in the MPC
 
 - The student implements Model Predictive Control that handles a 100 millisecond latency. Student provides details on how they deal with latency.
 
-I have accounted for the latency in the estimation by definition of an experimental latency constant `MPC::constants::latency` which I applied to the prediction in auxiliary function `apply_latency_to_state` at lines 98 - 104 in `main.cpp`. 
+I have accounted for the latency in the estimation by definition of an experimental latency constant `MPC::constants::latency` which I applied to the prediction in auxiliary function `predict_state` at lines 98 - 109 in `main.cpp`. 
 
 ---
 
