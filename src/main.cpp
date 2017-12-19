@@ -103,8 +103,8 @@ void predict_state(
     x_ = x0_ + v0_ * cos(psi0_) * MPC::constants::latency;
     y_ = y0_ + v0_ * sin(psi0_) * MPC::constants::latency;
     psi_ = v0_ / MPC::constants::Lf * delta * MPC::constants::latency;
-    //cte_ = cte0_ + v0_ * sin(epsi0_) * MPC::constants::latency;
-    //epsi_ = epsi0_ + v0_ / MPC::constants::Lf * delta * MPC::constants::latency;
+    cte_ = cte0_ + v0_ * sin(epsi0_) * MPC::constants::latency;
+    epsi_ = epsi0_ + v0_ / MPC::constants::Lf * delta * MPC::constants::latency;
     v_ = v0_ + a_ * MPC::constants::latency;
 }
 
